@@ -594,6 +594,20 @@ const musicLibrary = {
         },
 
         {
+            title: "Jaise Mera Tu",
+            artist: "Arijit Singh",
+            file: "Jaise Mera Tu - Full Video Song _ Sachin-Jigar _ Arijit Singh _ Priya Saraiya _ Happy Ending [aF108_YsXIw]"
+        },
+
+        {
+            title: "Ye Fitoor Mera",
+            artist: "Arijit Singh",
+            file: "Yeh Fitoor Mera - Full Song Fitoor Arijit Singh Aditya Roy Kapur, Katrina Kaif Amit Trivedi"
+        },
+
+
+
+        {
             title: "Kinna Sona",
             artist: "Sunil Kamath, Mithoon",
             file: "Kinna Sona Full AUDIO Song - Sunil Kamath Bhaag Johnny Kunal Khemu T-Series"
@@ -1846,7 +1860,7 @@ function setupHazardOverlay() {
                         try {
                             activeHazardSound.pause();
                             activeHazardSound.currentTime = 0;
-                        } catch (err) {}
+                        } catch (err) { }
                     }
                 }, 1900);
             } else {
@@ -1857,7 +1871,7 @@ function setupHazardOverlay() {
                     try {
                         activeHazardSound.pause();
                         activeHazardSound.currentTime = 0;
-                    } catch (err) {}
+                    } catch (err) { }
                 }
             }
         });
