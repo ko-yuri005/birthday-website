@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>A Little Something For You ♡</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="hazard-locked">
+
+    <!-- Audio Element for Hazard Sound -->
+    <audio id="hazardAudio" preload="auto" src="hazard.ogg">
+        <source src="hazard.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- ========================================= -->
+    <!-- FIRST SCREEN: HAZARD WARNING OVERLAY -->
+    <!-- ========================================= -->
+    <section id="hazardOverlay" class="hazard-overlay">
+
+        <div class="hazard-backdrop"></div>
+
+        <!-- Diagonal Yellow Hazard Tape -->
+        <div class="hazard-tape tape-top">
+            <div class="tape-track">
+                <span>⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️</span>
+                <span>⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️</span>
+            </div>
+        </div>
+
+        <div class="hazard-tape tape-bottom">
+            <div class="tape-track">
+                <span>⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️</span>
+                <span>⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️ RESTRICTED AREA ⚠️ PROCEED WITH CAUTION ⚠️ DANGER AHEAD ⚠️ HAZARDOUS STUFF ⚠️</span>
+            </div>
+        </div>
+
+        <!-- Central Warning Card -->
+        <div class="hazard-card">
+
+            <!-- Biohazard Icon -->
+            <div class="hazard-biohazard-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="2.5"></circle>
+                    <path d="M12 9.5a4.5 4.5 0 0 1-3.9-2.25 4.5 4.5 0 1 1 7.8 0A4.5 4.5 0 0 1 12 9.5z"></path>
+                    <path d="M10.2 13.2a4.5 4.5 0 0 1-4.5 0 4.5 4.5 0 1 1 3.9-6.75"></path>
+                    <path d="M13.8 13.2a4.5 4.5 0 0 1 4.5 0 4.5 4.5 0 1 1-3.9-6.75"></path>
+                </svg>
+            </div>
+
+            <!-- Yellow Restricted Pill Badge -->
+            <div class="hazard-badge">
+                🚨 RESTRICTED AREA: LEVEL 5 BIOHAZARD
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="hazard-title">
+                HAZARDOUS STUFF<br>AHEAD
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="hazard-subtitle">
+                EXTREME CUTE & EMOTIONAL HAZARD ZONE
+            </p>
+
+            <!-- Warning Box -->
+            <div class="hazard-warning-box">
+                <strong>⚠️ SEVERE WARNING:</strong> UNAUTHORIZED BREACH DETECTED. Proceeding will compromise your device signature, trigger instant security alarms, and expose you to uncontained high-level hazardous anomalies. Critical system failure imminent. TURN BACK IMMEDIATELY!
+            </div>
+
+            <!-- Action Button -->
+            <button id="hazardProceedBtn" class="hazard-btn">
+                Proceed Anyways (Unsafe) ⚡
+            </button>
+
+            <!-- Loading Progress Box -->
+            <div id="hazardLoadingBox" class="hazard-loading-box" style="display: none;">
+                <div class="hazard-loading-status">INITIALIZING... ACCESSING CLASSIFIED CONTENT...</div>
+                <div class="hazard-progress-bar">
+                    <div id="hazardProgressFill" class="hazard-progress-fill"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Mouse Particle Trail Container -->
+    <div id="particle-container"></div>
+
+    <!-- ========================================= -->
+    <!-- EXISTING BIRTHDAY WEBSITE CONTENT -->
+    <!-- ========================================= -->
+    <main id="birthdayContent">
+
+    <!-- LANDING PAGE (HERO) -->
+    <section class="hero" id="hero">
+
+        <div class="hero-ribbon">
+            ✨ SPECIAL DELIVERY FOR YOU ✨
+        </div>
+
+        <!-- Floating Animated Stickers -->
+        <div class="cute-sticker sticker-bear">🧸</div>
+        <div class="cute-sticker sticker-strawberry">🍓</div>
+        <div class="cute-sticker sticker-bow">🎀</div>
+        <div class="cute-sticker sticker-flower">🌸</div>
+        <div class="cute-sticker sticker-sparkle">✨</div>
+        <div class="cute-sticker sticker-cloud">☁️</div>
+        <div class="cute-sticker sticker-cake">🎂</div>
+        <div class="cute-sticker sticker-heart">💖</div>
+
+        <div class="doodle one">♡</div>
+        <div class="doodle two">✦</div>
+        <div class="doodle three">✧</div>
+        <div class="doodle four">♫</div>
+        <div class="doodle five">✿</div>
+
+        <p class="hero-subtitle">A little something for you...</p>
+
+        <h1>
+            For <span>Bloom</span>
+        </h1>
+
+        <button id="openButton" class="cute-btn hero-open-btn">
+            <span>Open it</span>
+            <span class="btn-heart">♡</span>
+        </button>
+
+        <div class="hero-sparkle-footer">
+            <span class="heart-pulse">💖</span> Click to unwrap your surprise <span class="heart-pulse">💖</span>
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- ENVELOPE SECTION -->
+    <!-- ========================= -->
+
+    <section class="envelope-section" id="envelopeSection">
+
+        <div class="envelope-wrapper">
+
+            <div class="envelope" id="envelope">
+
+                <!-- Letter -->
+                <div class="letter">
+
+                    <p>Dear [Her Name],</p>
+
+                    <p>
+                        There's a little something I wanted
+                        you to see today.
+                    </p>
+
+                    <p class="letter-sign">
+                        — Aru ♡
+                    </p>
+
+                </div>
+
+
+                <!-- Envelope -->
+                <div class="envelope-back"></div>
+
+                <div class="envelope-front"></div>
+
+                <div class="envelope-flap"></div>
+
+
+                <!-- Heart seal -->
+                <div class="seal">
+                    ♡
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <p class="envelope-hint">
+            Click the envelope ♡
+        </p>
+
+    </section>
+
+    <!-- ========================= -->
+    <!-- WISHING GARDEN SECTION -->
+    <!-- ========================= -->
+
+    <section class="garden-section" id="gardenSection">
+
+        <!-- Starfield Canvas -->
+        <canvas id="gardenStarfieldCanvas" class="section-starfield"></canvas>
+
+        <div class="garden-heading">
+            <p class="garden-kicker">✨ GLOWING SECRET GARDEN ✨</p>
+            <h2>The Wishing Garden 🌸</h2>
+            <span class="garden-subtitle-text">
+                Click the glowing flowers to make your birthday wishes bloom ♡
+            </span>
+        </div>
+
+        <div class="garden-card">
+
+            <div class="garden-flowers-container">
+
+                <div class="garden-flower-item" data-wish="May all your dreams come true this year! 🌟">
+                    <div class="flower-bloom bloom-pink">
+                        <span class="petal p1"></span>
+                        <span class="petal p2"></span>
+                        <span class="petal p3"></span>
+                        <span class="petal p4"></span>
+                        <span class="flower-center">✨</span>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <span class="flower-label">Wish 1</span>
+                </div>
+
+                <div class="garden-flower-item" data-wish="Endless joy, warmth, and laughter every day! 💖">
+                    <div class="flower-bloom bloom-cyan">
+                        <span class="petal p1"></span>
+                        <span class="petal p2"></span>
+                        <span class="petal p3"></span>
+                        <span class="petal p4"></span>
+                        <span class="flower-center">🌸</span>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <span class="flower-label">Wish 2</span>
+                </div>
+
+                <div class="garden-flower-item" data-wish="Success, peace of mind, and good health always! 🍀">
+                    <div class="flower-bloom bloom-purple">
+                        <span class="petal p1"></span>
+                        <span class="petal p2"></span>
+                        <span class="petal p3"></span>
+                        <span class="petal p4"></span>
+                        <span class="flower-center">🌺</span>
+                    </div>
+                    <div class="flower-stem"></div>
+                    <span class="flower-label">Wish 3</span>
+                </div>
+
+            </div>
+
+            <div class="garden-wish-display" id="gardenWishDisplay">
+                ✨ Click a flower above to reveal a wish ✨
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ========================= -->
+    <!-- BIRTHDAY PRESCRIPTION -->
+    <!-- ========================= -->
+
+    <section class="prescription-section" id="prescriptionSection">
+
+        <!-- Starfield Canvas -->
+        <canvas id="rxStarfieldCanvas" class="section-starfield"></canvas>
+
+        <div class="prescription-heading">
+
+            <p>Doctor, it's your turn now...</p>
+
+            <h2>
+                Your Birthday Prescription 🩺
+            </h2>
+
+            <span>
+                Officially prescribed by someone who is definitely
+                not qualified to prescribe anything .
+            </span>
+
+        </div>
+
+
+        <div class="prescription-card">
+
+            <div class="rx-watermark">Rx</div>
+
+            <div class="prescription-top">
+
+                <div>
+                    <small class="rx-symbol">℞</small>
+                    <h3>Birthday Treatment Plan</h3>
+                </div>
+
+                <div class="medical-symbol">
+                    +
+                </div>
+
+            </div>
+
+
+            <div class="patient-info">
+
+                <div>
+                    <span>Patient</span>
+                    <strong>Bloom</strong>
+                </div>
+
+                <div>
+                    <span>Occupation</span>
+                    <strong>Doctor™</strong>
+                </div>
+
+                <div>
+                    <span>Diagnosis</span>
+                    <strong>Birthday Syndrome</strong>
+                </div>
+
+            </div>
+
+
+            <div class="diagnosis">
+
+                <p class="label">
+                    Recommended Treatment
+                </p>
+
+
+                <div class="treatment-list">
+
+
+                    <div class="treatment"
+                        data-message="Preferably something that makes you want to dance around your room. 🎧✨">
+
+                        <div class="treatment-icon">
+                            🎧
+                        </div>
+
+                        <div>
+                            <strong>Music</strong>
+                            <p>As much as required</p>
+                        </div>
+
+                        <span class="plus">
+                            +
+                        </span>
+
+                    </div>
+
+
+                    <div class="treatment"
+                        data-message="Birthday calories are scientifically non-existent. I checked. Trust me. 🍰">
+
+                        <div class="treatment-icon">
+                            🍰
+                        </div>
+
+                        <div>
+                            <strong>Cake</strong>
+                            <p>Minimum 1 slice</p>
+                        </div>
+
+                        <span class="plus">
+                            +
+                        </span>
+
+                    </div>
+
+
+                    <div class="treatment"
+                        data-message="Preferably a day where you sleep on time and wake up feeling fresh and ready for the next day. 🍀 😴☁️">
+
+                        <div class="treatment-icon">
+                            😴
+                        </div>
+
+                        <div>
+                            <strong>Proper Sleep</strong>
+                            <p>Highly recommended</p>
+                        </div>
+
+                        <span class="plus">
+                            +
+                        </span>
+
+                    </div>
+
+
+                    <div class="treatment"
+                        data-message="You've been working way too hard for quite some time now... a little laughter won't hurt. 😂 Laugh as much as you want! 😂✨">
+
+                        <div class="treatment-icon">
+                            😂
+                        </div>
+
+                        <div>
+                            <strong>Laughter</strong>
+                            <p>Unlimited dosage</p>
+                        </div>
+
+                        <span class="plus">
+                            +
+                        </span>
+
+                    </div>
+
+
+                    <div class="treatment"
+                        data-message="You’ve been working really hard with your studies lately, so just for today, take a step back and let yourself enjoy a few moments of the day. You’ve earned it. 🍀 🌸💕">
+
+                        <div class="treatment-icon">
+                            🌸
+                        </div>
+
+                        <div>
+                            <strong>Zero Stress</strong>
+                            <p>Mandatory for today</p>
+                        </div>
+
+                        <span class="plus">
+                            +
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="prognosis">
+
+                <div class="prognosis-text">
+                    <span>PROGNOSIS</span>
+                    <strong>Excellent ♡</strong>
+                </div>
+
+                <div class="doctor-signature">
+                    <span class="sig-title">Refill: ∞ times</span>
+                    <span class="sig-name">Dr. Arnab ♡</span>
+                </div>
+
+            </div>
+
+            <div class="rx-stamp">APPROVED 🩺</div>
+
+
+        </div>
+
+
+        <p class="prescription-hint">
+            Psst... click the treatments 👀
+        </p>
+
+
+    </section>
+
+    <!-- ========================================= -->
+    <!-- MUSIC SECTION -->
+    <!-- ========================================= -->
+
+    <section class="music-section" id="musicSection">
+
+        <!-- INTRO -->
+
+        <div class="music-intro">
+
+            <p class="music-kicker">
+                ♫ a little soundtrack
+            </p>
+
+            <h2>
+                Her Soundtrack
+            </h2>
+
+            <p class="music-subtitle">
+                A few songs that deserved a little place here.
+            </p>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- PLAYER CARD -->
+        <!-- ===================================== -->
+
+        <div class="music-player-card" id="musicPlayerCard">
+
+            <!-- Washi Tapes -->
+            <div class="washi-tape top-tape"></div>
+            <div class="washi-tape bottom-tape"></div>
+
+            <!-- Card Stickers -->
+            <div class="card-sticker sticker-bear">🧸</div>
+            <div class="card-sticker sticker-ribbon">🎀</div>
+            <div class="card-sticker sticker-music">🎵</div>
+            <div class="card-sticker sticker-star">✨</div>
+
+            <!-- Floating Warning Bubble -->
+            <div class="floating-warning-pill">
+                <span class="warning-icon">⚠️</span>
+                <span class="warning-text">The website might be a little imperfect, just like its creator. 😭 ❤️</span>
+            </div>
+
+            <!-- Player Box -->
+            <div class="player-display-box">
+
+                <!-- Headphones Frame -->
+                <div class="headphones-wrapper">
+                    <div class="headphone-band">
+                        <div class="headphone-bow">🎀</div>
+                    </div>
+                    <div class="earcup earcup-left">
+                        <span class="earcup-heart">✨</span>
+                    </div>
+                    <div class="earcup earcup-right">
+                        <span class="earcup-heart">✨</span>
+                    </div>
+                </div>
+
+                <!-- Tonearm / Needle -->
+                <div class="tonearm-assembly">
+                    <div class="tonearm-base"></div>
+                    <div class="tonearm-arm"></div>
+                    <div class="tonearm-head"></div>
+                </div>
+
+                <!-- Spinning Vinyl Record -->
+                <div class="vinyl-disc" id="vinylDisc">
+                    <div class="vinyl-grooves"></div>
+                    <div class="vinyl-center-ring">
+                        <img src="pfp.png" alt="Profile Picture" class="vinyl-pfp" />
+                    </div>
+                </div>
+
+                <!-- Track Dots -->
+                <div class="player-dots" id="playerDots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+
+            </div>
+
+
+            <!-- Song information -->
+
+            <div class="current-song">
+
+                <p class="playing-label">
+                    ✨ NOW PLAYING ✨
+                </p>
+
+                <h3 id="currentSongTitle">
+                    Blossom
+                </h3>
+
+                <p id="currentSongArtist">
+                    Matthew Ifield
+                </p>
+
+            </div>
+
+
+            <!-- Custom controls -->
+
+            <div class="custom-controls">
+
+                <button id="previousSong" class="control-button" title="Previous Song">
+                    ⏮
+                </button>
+
+
+                <button id="playPauseSong" class="play-button" title="Play / Pause">
+                    ▶
+                </button>
+
+
+                <button id="nextSong" class="control-button" title="Next Song">
+                    ⏭
+                </button>
+
+            </div>
+
+
+            <p class="player-note">
+                Select a mood or song below to start playing ♡
+            </p>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- MOOD FILTERS -->
+        <!-- ===================================== -->
+
+        <div class="mood-buttons">
+
+            <button class="mood-button active" data-mood="quiet">
+                🌅 Quiet Mornings
+            </button>
+
+            <button class="mood-button" data-mood="heart">
+                🌙 Heart Gets Louder
+            </button>
+
+            <button class="mood-button" data-mood="main">
+                🌹 Main Character
+            </button>
+
+            <button class="mood-button" data-mood="feelings">
+                💣 No More Feelings
+            </button>
+
+            <button class="mood-button" data-mood="chaos">
+                🔥 Play Something Loud
+            </button>
+
+            <button class="mood-button" data-mood="night">
+                🌌 End Of The Night
+            </button>
+
+        </div>
+
+
+        <div class="song-list" id="songList">
+        </div>
+
+
+    </section>
+
+    </main>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script src="script_full_music.js"></script>
+
+</body>
+
+</html>
