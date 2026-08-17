@@ -248,6 +248,22 @@ const musicLibrary = {
             file: "Ella Bright - Baby Now That I Found You (Lyrics)"
         },
 
+
+        {
+            title: "Aahista",
+            artist: "Arijit Singh & Jonita Gandhi",
+            file: "Aahista - Lyrical _ Laila Majnu _ Arijit Singh & Jonita Gandhi _ Avinash T & Tripti D _ Imtiaz Ali [m54o2IRV7e8]"
+        },
+
+        {
+            title: "Dil na Jaaneya",
+            artist: "Akasa, Lauv, Rochak Kohli",
+            file: "Dil Na Jaaneya - Lyrical Good Newwz Akshay, Kareena, Diljit Kiara Rochak feat. Lauv Akasa"
+        },
+
+
+
+
         {
             title: "Enna Sona",
             artist: "Arijit Singh",
@@ -360,6 +376,12 @@ const musicLibrary = {
         },
 
         {
+            title: "Saware",
+            artist: "Arijit Singh",
+            file: "Saware Full AUDIO Song - Arijit Singh Phantom T-Series"
+        },
+
+        {
             title: "Darasal",
             artist: "Atif Aslam",
             file: "Atif Aslam Darasal Full Video Song Raabta Sushant Singh Rajput Kriti Sanon Pritam"
@@ -370,6 +392,16 @@ const musicLibrary = {
             artist: "Shreya Ghoshal",
             file: "Chand Mera Dil - Shreya Ghoshal _ Ananya, Lakshya _ Sachin-Jigar, Shreya Ghoshal, Amitabh B. [E33lpgXcBAg]"
         },
+
+
+        {
+            title: "Qayde Se",
+            artist: "Arijit Singh, Pritam Amitabh, Bhattacharya",
+            file: "Qayde Se (Lyrical Video) Arijit Singh Pritam Amitabh Bhattacharya Metro…In Dino Anurag Basu"
+        },
+
+
+
 
         {
             title: "Dekh Lena",
@@ -603,6 +635,13 @@ const musicLibrary = {
             title: "Ye Fitoor Mera",
             artist: "Arijit Singh",
             file: "Yeh Fitoor Mera - Full Song Fitoor Arijit Singh Aditya Roy Kapur, Katrina Kaif Amit Trivedi"
+        },
+
+
+         {
+            title: "Little Bit More",
+            artist: "Suriel Hess",
+            file: "Suriel Hess - Little Bit More (Official Audio)"
         },
 
 
@@ -954,6 +993,105 @@ const nextButton =
 const moodButtons =
     document.querySelectorAll(".mood-button");
 
+const currentTimeDisplay =
+    document.getElementById("currentTime");
+
+const totalDurationDisplay =
+    document.getElementById("totalDuration");
+
+const seekBar =
+    document.getElementById("seekBar");
+
+const seekBarFill =
+    document.getElementById("seekBarFill");
+
+const seekBarThumb =
+    document.getElementById("seekBarThumb");
+
+let isDraggingSeekbar = false;
+
+
+/* =========================================================
+   SEEKBAR HELPERS
+   ========================================================= */
+
+function formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+}
+
+function updateSeekbarUI(percent, currentSecs, totalSecs) {
+    const clampedPercent = Math.min(100, Math.max(0, percent));
+    if (seekBarFill) seekBarFill.style.width = `${clampedPercent}%`;
+    if (seekBarThumb) seekBarThumb.style.left = `${clampedPercent}%`;
+    if (seekBar && !isDraggingSeekbar) seekBar.value = clampedPercent;
+
+    if (currentTimeDisplay && currentSecs !== undefined) {
+        currentTimeDisplay.innerText = formatTime(currentSecs);
+    }
+    if (totalDurationDisplay && totalSecs !== undefined && !isNaN(totalSecs) && totalSecs > 0) {
+        totalDurationDisplay.innerText = formatTime(totalSecs);
+    }
+}
+
+function resetSeekbarUI() {
+    updateSeekbarUI(0, 0, 0);
+    if (totalDurationDisplay) {
+        totalDurationDisplay.innerText = "0:00";
+    }
+}
+
+
+/* =========================================================
+   SEEKBAR DRAG & SCRUB INTERACTION
+   ========================================================= */
+
+function handleSeekInput() {
+    if (!audioPlayer || !audioPlayer.duration || isNaN(audioPlayer.duration) || audioPlayer.duration <= 0) return;
+    const targetPercent = parseFloat(seekBar.value);
+    const targetTime = (targetPercent / 100) * audioPlayer.duration;
+    try {
+        audioPlayer.currentTime = targetTime;
+    } catch (err) {
+        console.warn("Seek error:", err);
+    }
+    updateSeekbarUI(targetPercent, targetTime, audioPlayer.duration);
+}
+
+if (seekBar) {
+    seekBar.addEventListener("mousedown", function () {
+        isDraggingSeekbar = true;
+    });
+
+    seekBar.addEventListener("touchstart", function () {
+        isDraggingSeekbar = true;
+    }, { passive: true });
+
+    seekBar.addEventListener("input", function () {
+        isDraggingSeekbar = true;
+        handleSeekInput();
+    });
+
+    seekBar.addEventListener("change", function () {
+        handleSeekInput();
+        isDraggingSeekbar = false;
+    });
+
+    window.addEventListener("mouseup", function () {
+        if (isDraggingSeekbar) {
+            isDraggingSeekbar = false;
+        }
+    });
+
+    window.addEventListener("touchend", function () {
+        if (isDraggingSeekbar) {
+            isDraggingSeekbar = false;
+        }
+    });
+}
+
 
 /* =========================================================
    CREATE AUDIO PLAYER
@@ -1161,6 +1299,48 @@ function setupAudioEvents() {
         }
     );
 
+
+    /*
+       Update seekbar progress automatically as song plays.
+    */
+
+    audioPlayer.addEventListener(
+        "timeupdate",
+        function () {
+            if (!isDraggingSeekbar && audioPlayer.duration && !isNaN(audioPlayer.duration) && audioPlayer.duration > 0) {
+                const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                updateSeekbarUI(progressPercent, audioPlayer.currentTime, audioPlayer.duration);
+            }
+        }
+    );
+
+
+    /*
+       Update total duration display when audio metadata is ready.
+    */
+
+    audioPlayer.addEventListener(
+        "loadedmetadata",
+        function () {
+            if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+                if (totalDurationDisplay) {
+                    totalDurationDisplay.innerText = formatTime(audioPlayer.duration);
+                }
+            }
+        }
+    );
+
+    audioPlayer.addEventListener(
+        "durationchange",
+        function () {
+            if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+                if (totalDurationDisplay) {
+                    totalDurationDisplay.innerText = formatTime(audioPlayer.duration);
+                }
+            }
+        }
+    );
+
 }
 
 
@@ -1333,6 +1513,7 @@ function loadSong(index, autoPlay = false) {
     */
 
     audioPlayer.currentTime = 0;
+    resetSeekbarUI();
 
 
     /*
@@ -1845,7 +2026,7 @@ function setupHazardOverlay() {
                 hazardProceedBtn.style.display = "none";
                 hazardLoadingBox.style.display = "block";
 
-                // Animate progress fill over 1.8s
+                // Animate progress fill over 3.5s
                 setTimeout(() => {
                     hazardProgressFill.style.width = "100%";
                 }, 50);
@@ -1862,7 +2043,7 @@ function setupHazardOverlay() {
                             activeHazardSound.currentTime = 0;
                         } catch (err) { }
                     }
-                }, 1900);
+                }, 3600);
             } else {
                 hazardOverlay.classList.add("dismissed");
                 document.body.classList.remove("hazard-locked");
