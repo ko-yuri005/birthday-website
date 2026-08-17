@@ -691,7 +691,7 @@ const musicLibrary = {
         {
             title: "O Yaara",
             artist: "Kaavish",
-            file: "O Yaara _ Coke Studio Pakistan _ Season 15 _ Abdul Hannan x Kaavish [4DVDFXiZKCg]"
+            file: "O Yaara _ Coke Studio Pakistan _ Season 15 _ Abdul Hannan x Kaavish [4DVDFxiZKCg]"
         },
 
         {
