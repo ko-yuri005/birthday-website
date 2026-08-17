@@ -366,7 +366,7 @@ const musicLibrary = {
         {
             title: "Ishq Mubarak",
             artist: "Arijit Singh",
-            file: "Arijit Singh ISHQ MUBARAK Full Song With Lyrics Tum Bin 2"
+            file: "Arijit Singh ISHQ MUBARAK Full Song WIth Lyrics Tum Bin 2"
         },
 
         {
