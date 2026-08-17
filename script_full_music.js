@@ -703,7 +703,7 @@ const musicLibrary = {
         {
             title: "Phir Le Aya Dil",
             artist: "Rekha Bhardwaj",
-            file: "Phir Le Aya Dil - lyrical Video Rekha Bhardwaj Ranbir, Priyanka, Ileana D Cruz Pritam Barfi"
+            file: "Phir Le Aya Dil - Lyrical Video Rekha Bhardwaj Ranbir, Priyanka, Ileana D Cruz Pritam Barfi"
         },
 
         {
