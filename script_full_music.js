@@ -628,7 +628,7 @@ const musicLibrary = {
         {
             title: "Jaise Mera Tu",
             artist: "Arijit Singh",
-            file: "Jaise Mera Tu - Full Video Song _ Sachin-Jigar _ Arijit Singh _ Priya Saraiya _ Happy Ending [aF108_YsXIw]"
+            file: "Jaise Mera Tu - Full Audio Song _ Sachin-Jigar _ Arijit Singh, Priya Saraiya _ Happy Ending [e2rK0QnKDmI]"
         },
 
         {
