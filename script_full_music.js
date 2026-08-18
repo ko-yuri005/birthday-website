@@ -1348,13 +1348,529 @@ function setupAudioEvents() {
    LOAD SONG
    ========================================================= */
 
-function loadSong(index, autoPlay = false) {
+/* =========================================================
+   FAST MP3 AUDIO PLAYER
+   ========================================================= */
+
+/*
+   PERFORMANCE STRATEGY
+
+   1. Main player uses preload="metadata"
+      instead of downloading aggressively.
+
+   2. Selected song loads normally.
+
+   3. Next song is preloaded in the background.
+
+   4. Already-preloaded songs are cached so
+      switching tracks feels much faster.
+
+   5. Audio events are attached only once.
+*/
+
+
+/* =========================================================
+   PRELOAD CACHE
+   ========================================================= */
+
+const preloadedSongs = new Map();
+
+
+function getSongPath(mood, index) {
+
+    const playlist = musicLibrary[mood];
+
+    if (!playlist || !playlist[index]) {
+        return null;
+    }
+
+    const song = playlist[index];
+    const folder = musicFolders[mood];
+
+    return createSongPath(
+        folder,
+        song.file
+    );
+
+}
+
+
+/* =========================================================
+   PRELOAD NEXT SONG
+   ========================================================= */
+
+function preloadSong(mood, index) {
+
+    const playlist = musicLibrary[mood];
+
+    if (!playlist || playlist.length === 0) {
+        return;
+    }
+
+    /*
+       Keep index inside playlist.
+    */
+
+    if (index >= playlist.length) {
+        index = 0;
+    }
+
+    if (index < 0) {
+        index = playlist.length - 1;
+    }
+
+
+    const path = getSongPath(
+        mood,
+        index
+    );
+
+    if (!path) {
+        return;
+    }
+
+
+    /*
+       Don't preload the same song twice.
+    */
+
+    if (preloadedSongs.has(path)) {
+        return;
+    }
+
+
+    console.log(
+        "⚡ Preloading:",
+        playlist[index].title
+    );
+
+
+    const preloader = new Audio();
+
+    preloader.preload = "auto";
+
+    preloader.src = path;
+
+    /*
+       Start loading in the background.
+    */
+
+    preloader.load();
+
+
+    /*
+       Store it so we don't preload it again.
+    */
+
+    preloadedSongs.set(
+        path,
+        preloader
+    );
+
+}
+
+
+/* =========================================================
+   PRELOAD CURRENT + NEXT SONG
+   ========================================================= */
+
+function prepareSong(index) {
+
+    /*
+       Preload the next song.
+
+       We deliberately DON'T preload
+       every song in the playlist.
+    */
+
+    const playlist =
+        musicLibrary[currentMood];
+
+    if (!playlist || playlist.length === 0) {
+        return;
+    }
+
+
+    let nextIndex =
+        index + 1;
+
+
+    if (nextIndex >= playlist.length) {
+        nextIndex = 0;
+    }
+
+
+    /*
+       Give the browser a moment before
+       starting background download.
+
+       This prevents the next song from
+       competing too aggressively with
+       the current page.
+    */
+
+    setTimeout(function () {
+
+        preloadSong(
+            currentMood,
+            nextIndex
+        );
+
+    }, 500);
+
+}
+
+
+/* =========================================================
+   CREATE AUDIO PLAYER
+   ========================================================= */
+
+function createAudioPlayer() {
+
+    /*
+       Try to reuse existing audio element.
+    */
+
+    audioPlayer =
+        document.getElementById("mp3-audio");
+
+
+    /*
+       If no audio element exists,
+       create one.
+    */
+
+    if (!audioPlayer) {
+
+        audioPlayer =
+            document.createElement("audio");
+
+        audioPlayer.id =
+            "mp3-audio";
+
+
+        /*
+           IMPORTANT:
+
+           metadata = don't aggressively
+           download the entire MP3.
+
+           This makes initial website loading
+           much lighter.
+        */
+
+        audioPlayer.preload =
+            "metadata";
+
+
+        /*
+           We already have custom controls.
+        */
+
+        audioPlayer.controls =
+            false;
+
+
+        /*
+           Keep it hidden.
+        */
+
+        audioPlayer.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            audioPlayer
+        );
+
+    }
+
+
+    /*
+       Attach events only once.
+    */
+
+    if (
+        audioPlayer.dataset.eventsAttached !== "true"
+    ) {
+
+        setupAudioEvents();
+
+        audioPlayer.dataset.eventsAttached =
+            "true";
+
+    }
+
+}
+
+
+/* =========================================================
+   AUDIO EVENTS
+   ========================================================= */
+
+function setupAudioEvents() {
+
+    if (!audioPlayer) {
+        return;
+    }
+
+
+    const vinylDisc =
+        document.getElementById("vinylDisc");
+
+
+    const tonearmAssembly =
+        document.querySelector(
+            ".tonearm-assembly"
+        );
+
+
+    /* =====================================================
+       PLAY
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "play",
+        function () {
+
+            if (playPauseButton) {
+
+                playPauseButton.innerText =
+                    "❚❚";
+
+            }
+
+
+            if (vinylDisc) {
+
+                vinylDisc.classList.add(
+                    "playing"
+                );
+
+            }
+
+
+            if (tonearmAssembly) {
+
+                tonearmAssembly.classList.add(
+                    "playing"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       PAUSE
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "pause",
+        function () {
+
+            if (playPauseButton) {
+
+                playPauseButton.innerText =
+                    "▶";
+
+            }
+
+
+            if (vinylDisc) {
+
+                vinylDisc.classList.remove(
+                    "playing"
+                );
+
+            }
+
+
+            if (tonearmAssembly) {
+
+                tonearmAssembly.classList.remove(
+                    "playing"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       SONG ENDED
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "ended",
+        function () {
+
+            playNextSong();
+
+        }
+    );
+
+
+    /* =====================================================
+       ERROR
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "error",
+        function () {
+
+            console.error(
+                "❌ MP3 FAILED:",
+                audioPlayer.src
+            );
+
+
+            console.error(
+                "Song:",
+                currentSong
+            );
+
+
+            if (playPauseButton) {
+
+                playPauseButton.innerText =
+                    "▶";
+
+            }
+
+
+            if (vinylDisc) {
+
+                vinylDisc.classList.remove(
+                    "playing"
+                );
+
+            }
+
+
+            if (tonearmAssembly) {
+
+                tonearmAssembly.classList.remove(
+                    "playing"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       TIME UPDATE
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "timeupdate",
+        function () {
+
+            if (
+                !isDraggingSeekbar &&
+                audioPlayer.duration &&
+                !isNaN(audioPlayer.duration) &&
+                audioPlayer.duration > 0
+            ) {
+
+                const progressPercent =
+                    (
+                        audioPlayer.currentTime /
+                        audioPlayer.duration
+                    ) * 100;
+
+
+                updateSeekbarUI(
+                    progressPercent,
+                    audioPlayer.currentTime,
+                    audioPlayer.duration
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       METADATA LOADED
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "loadedmetadata",
+        function () {
+
+            if (
+                audioPlayer.duration &&
+                !isNaN(audioPlayer.duration)
+            ) {
+
+                if (totalDurationDisplay) {
+
+                    totalDurationDisplay.innerText =
+                        formatTime(
+                            audioPlayer.duration
+                        );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       DURATION CHANGE
+       ===================================================== */
+
+    audioPlayer.addEventListener(
+        "durationchange",
+        function () {
+
+            if (
+                audioPlayer.duration &&
+                !isNaN(audioPlayer.duration)
+            ) {
+
+                if (totalDurationDisplay) {
+
+                    totalDurationDisplay.innerText =
+                        formatTime(
+                            audioPlayer.duration
+                        );
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   LOAD SONG
+   ========================================================= */
+
+function loadSong(
+    index,
+    autoPlay = false
+) {
 
     const playlist =
         musicLibrary[currentMood];
 
 
-    if (!playlist || playlist.length === 0) {
+    if (
+        !playlist ||
+        playlist.length === 0
+    ) {
 
         console.warn(
             "No songs found for mood:",
@@ -1389,26 +1905,57 @@ function loadSong(index, autoPlay = false) {
 
 
     console.log(
-        "Loading song:",
+        "🎵 Loading:",
         currentSong.title
     );
 
-    /* Update track dots */
-    const dots = document.querySelectorAll(".player-dots .dot");
+
+    /* =====================================================
+       UPDATE TRACK DOTS
+       ===================================================== */
+
+    const dots =
+        document.querySelectorAll(
+            ".player-dots .dot"
+        );
+
+
     if (dots.length > 0) {
-        dots.forEach((dot, idx) => {
-            if (idx === (currentSongIndex % dots.length)) {
-                dot.classList.add("active");
-            } else {
-                dot.classList.remove("active");
+
+        dots.forEach(
+            function (dot, idx) {
+
+                if (
+                    idx ===
+                    (
+                        currentSongIndex %
+                        dots.length
+                    )
+                ) {
+
+                    dot.classList.add(
+                        "active"
+                    );
+
+                }
+
+                else {
+
+                    dot.classList.remove(
+                        "active"
+                    );
+
+                }
+
             }
-        });
+        );
+
     }
 
 
-    /*
-       Update song title.
-    */
+    /* =====================================================
+       UPDATE TITLE
+       ===================================================== */
 
     if (songTitle) {
 
@@ -1418,9 +1965,9 @@ function loadSong(index, autoPlay = false) {
     }
 
 
-    /*
-       Update artist.
-    */
+    /* =====================================================
+       UPDATE ARTIST
+       ===================================================== */
 
     if (songArtist) {
 
@@ -1430,17 +1977,21 @@ function loadSong(index, autoPlay = false) {
     }
 
 
-    /*
-       Highlight selected song.
-    */
+    /* =====================================================
+       HIGHLIGHT SELECTED SONG
+       ===================================================== */
 
     document
         .querySelectorAll(".song-item")
-        .forEach(function (item) {
+        .forEach(
+            function (item) {
 
-            item.classList.remove("active");
+                item.classList.remove(
+                    "active"
+                );
 
-        });
+            }
+        );
 
 
     const selected =
@@ -1451,14 +2002,16 @@ function loadSong(index, autoPlay = false) {
 
     if (selected) {
 
-        selected.classList.add("active");
+        selected.classList.add(
+            "active"
+        );
 
     }
 
 
-    /*
-       Make sure audio player exists.
-    */
+    /* =====================================================
+       MAKE SURE PLAYER EXISTS
+       ===================================================== */
 
     if (!audioPlayer) {
 
@@ -1472,53 +2025,81 @@ function loadSong(index, autoPlay = false) {
     }
 
 
-    /*
-       Build the local MP3 path.
-    */
-
-    const folder =
-        musicFolders[currentMood];
-
+    /* =====================================================
+       BUILD MP3 PATH
+       ===================================================== */
 
     const audioPath =
-        createSongPath(
-            folder,
-            currentSong.file
+        getSongPath(
+            currentMood,
+            currentSongIndex
         );
 
 
+    if (!audioPath) {
+        return;
+    }
+
+
     console.log(
-        "MP3:",
+        "📁 MP3:",
         audioPath
     );
 
 
-    /*
-       Stop previous song.
-    */
+    /* =====================================================
+       STOP CURRENT SONG
+       ===================================================== */
 
     audioPlayer.pause();
 
 
     /*
-       Set new MP3.
+       Only change src when actually switching
+       to another song.
     */
 
-    audioPlayer.src =
-        audioPath;
+    if (
+        audioPlayer.src !==
+        new URL(
+            audioPath,
+            window.location.href
+        ).href
+    ) {
+
+        audioPlayer.src =
+            audioPath;
+
+    }
 
 
-    /*
-       Reset position.
-    */
+    /* =====================================================
+       RESET POSITION
+       ===================================================== */
 
-    audioPlayer.currentTime = 0;
+    try {
+
+        audioPlayer.currentTime =
+            0;
+
+    }
+
+    catch (err) {
+
+        console.warn(
+            "Could not reset audio:",
+            err
+        );
+
+    }
+
+
     resetSeekbarUI();
 
 
-    /*
-       Reset play button.
-    */
+    /* =====================================================
+       RESET BUTTON
+       ===================================================== */
 
     if (playPauseButton) {
 
@@ -1528,11 +2109,29 @@ function loadSong(index, autoPlay = false) {
     }
 
 
-    /*
-       Start immediately if requested.
-    */
+    /* =====================================================
+       PREPARE NEXT SONG
+       ===================================================== */
+
+    prepareSong(
+        currentSongIndex
+    );
+
+
+    /* =====================================================
+       AUTOPLAY
+       ===================================================== */
 
     if (autoPlay) {
+
+        /*
+           Calling play() immediately after the
+           user's click allows normal browser
+           playback.
+
+           If the MP3 hasn't downloaded enough yet,
+           the browser waits for buffering.
+        */
 
         const playPromise =
             audioPlayer.play();
@@ -1545,8 +2144,8 @@ function loadSong(index, autoPlay = false) {
             playPromise.catch(
                 function (error) {
 
-                    console.log(
-                        "Playback waiting for user interaction:",
+                    console.warn(
+                        "Playback waiting:",
                         error
                     );
 
@@ -1558,8 +2157,6 @@ function loadSong(index, autoPlay = false) {
     }
 
 }
-
-
 /* =========================================================
    PLAY / PAUSE
    ========================================================= */
